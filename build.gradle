@@ -1,0 +1,65 @@
+plugins {
+    id 'groovy'
+    id 'java'
+    id 'maven-publish'
+}
+
+group 'com.wt.test'
+version '1.0.0-SNAPSHOT'
+
+dependencies {
+    implementation 'org.codehaus.groovy:groovy-all:3.0.5'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+ext {
+    sourceCompatibility = 11
+    archiveClassifier = ''
+}
+
+jar {
+    archiveClassifier = rootProject.ext.archiveClassifier
+}
+
+//https://docs.gradle.org/7.3/userguide/publishing_maven.html#publishing_maven:resolved_dependencies
+//In the example above, Gradle will use the versions resolved on the runtimeClasspath for dependencies declared in api,
+//which are mapped to the compile scope of Maven. Gradle will also use the versions resolved on the runtimeClasspath for dependencies declared in implementation,
+//which are mapped to the runtime scope of Maven. fromResolutionResult() indicates that Gradle should use the default classpath of a variant and runtimeClasspath is the default classpath of java-runtime.
+
+allprojects {
+
+    repositories {
+        mavenLocal()
+        maven { name "Alibaba"; url "https://maven.aliyun.com/repository/public" }
+        mavenCentral()
+    }
+
+    buildscript {
+        repositories {
+            mavenLocal()
+            maven { name "Alibaba"; url 'https://maven.aliyun.com/repository/public' }
+            mavenCentral()
+        }
+    }
+
+    publishing {
+        publications {
+            mavenLocal(MavenPublication) {
+                from components.java
+                versionMapping {
+                    usage('java-api') {
+                        fromResolutionOf('runtimeClasspath')
+                    }
+                    usage('java-runtime') {
+                        fromResolutionResult()
+                    }
+                }
+            }
+        }
+    }
+}
