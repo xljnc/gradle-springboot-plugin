@@ -1,22 +1,21 @@
 package com.wt.test.gradle.plugin.springboot
 
-import org.gradle.api.Plugin
-
 
 description("Gradle SpringBoot Plugin")
 
 class QiyuSpringBootPlugin implements Plugin<Settings> {
 
-    static final String EXTENSION_NAME = "qiyuSpringboot";
+    static final String EXTENSION_NAME = "qiyuSpringBoot";
     static final String BUILD_FILE_NAME = "springboot-build.gradle";
 
     @Override
     void apply(Settings settings) {
         settings.rootProject.extensions.create(EXTENSION_NAME, SpringBootPluginExtension);
-        settings.include(BUILD_FILE_NAME);
+        settings.apply(BUILD_FILE_NAME);
     }
 }
 
 class SpringBootPluginExtension {
-
+    int sourceCompatibility = 11;
+    String archiveClassifier = '';
 }

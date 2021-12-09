@@ -8,13 +8,12 @@ plugins {
     id 'maven-publish'
 }
 
-group 'com.wt.test'
-version '1.0.0-SNAPSHOT'
-
-ext {
+qiyuSpringBoot{
     sourceCompatibility = 11
     archiveClassifier = ''
 }
+
+ext = project.extensions.findByName("qiyuSpringBoot")
 
 dependencyManagement {
     dependencies {
