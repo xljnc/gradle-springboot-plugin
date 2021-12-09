@@ -1,5 +1,7 @@
 package com.wt.test.gradle.plugin.springboot
 
+import org.gradle.api.Plugin
+
 
 description("Gradle SpringBoot Plugin")
 
