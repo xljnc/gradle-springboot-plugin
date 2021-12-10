@@ -2,6 +2,16 @@ plugins {
     id 'groovy'
     id 'java'
     id 'maven-publish'
+    id 'java-gradle-plugin'
+}
+
+gradlePlugin {
+    plugins {
+        simplePlugin {
+            id = 'qiyuSpringBootPlugin'
+            implementationClass = 'com.wt.test.gradle.plugin.springboot.QiyuSpringBootPlugin'
+        }
+    }
 }
 
 group 'com.wt.test'
@@ -50,6 +60,9 @@ allprojects {
     publishing {
         publications {
             mavenLocal(MavenPublication) {
+                group 'com.wt.test'
+                artifactId 'gradle-springboot-plugin'
+                version '1.0.0-SNAPSHOT'
                 from components.java
                 versionMapping {
                     usage('java-api') {
