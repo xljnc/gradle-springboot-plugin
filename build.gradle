@@ -2,6 +2,7 @@ plugins {
     id 'groovy'
     id 'java'
     id 'maven-publish'
+    id 'java-gradle-plugin'
 }
 
 group 'com.wt.test'
