@@ -17,6 +17,10 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
     @Override
     void apply(Project project) {
         def qiyuSpringBoot = project.extensions.create(EXTENSION_NAME, SpringBootPluginExtension);
+
+//        project.buildscript.dependencies.add("classpath", "org.springframework.boot:spring-boot-gradle-plugin:2.6.1")
+//        project.buildscript.dependencies.add("classpath", "io.spring.gradle:dependency-management-plugin:1.0.11.RELEASE")
+
         project.repositories {
             mavenLocal()
             maven { name "Alibaba"; url "https://maven.aliyun.com/repository/public" }
@@ -36,9 +40,6 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
                 maven { name "Alibaba"; url "https://maven.aliyun.com/repository/public" }
                 mavenCentral()
             }
-
-//            it.buildscript.dependencies.add("classpath", "org.springframework.boot:spring-boot-gradle-plugin:2.6.1")
-//            it.buildscript.dependencies.add("classpath", "io.spring.gradle:dependency-management-plugin:1.0.11.RELEASE")
 
             it.apply plugin: 'java'
             it.apply plugin: 'java-library'
