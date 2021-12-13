@@ -54,14 +54,14 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
                     task.setProperty("archiveClassifier", qiyuSpringBoot.jarArchiveClassifier)
             }
 
-            it.task('sourceJar', type: Jar, dependsOn: 'classes') {
+            Project curr = it
+
+            def sourceJarTask = it.task('sourceJar', type: Jar, group: 'build' ,dependsOn: 'classes') {
                 archiveClassifier = qiyuSpringBoot.sourceJarArchiveClassifier
-                JavaPluginExtension javaPluginExtension = project.extensions.getByType(JavaPluginExtension)
+                JavaPluginExtension javaPluginExtension = curr.extensions.getByType(JavaPluginExtension)
                 SourceSetContainer sourceSets = javaPluginExtension.sourceSets
                 from sourceSets.main.allSource
             }
-
-           def sourceJarTask = it.tasks.getByName('sourceJar')
 
             def publicationsClosure = {
                 maven(MavenPublication) {
