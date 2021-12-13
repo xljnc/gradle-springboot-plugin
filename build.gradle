@@ -20,11 +20,34 @@ test {
 
 ext {
     sourceCompatibility = 11
-    archiveClassifier = ''
+    jarArchiveClassifier = ''
+    sourceJarArchiveClassifier = 'sources'
+    docJarArchiveClassifier = 'javadoc'
 }
 
 jar {
-    archiveClassifier = rootProject.ext.archiveClassifier
+    archiveClassifier = rootProject.ext.jarArchiveClassifier
+}
+
+//打包sourcesJar任务
+task sourcesJar(type: Jar, dependsOn: classes) {
+    archiveClassifier = rootProject.ext.sourceJarArchiveClassifier
+    from sourceSets.main.allSource
+}
+// 打包javadocJar任务
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    archiveClassifier = rootProject.ext.docJarArchiveClassifier
+    from javadoc.destinationDir
+}
+// 解决javadoc打包乱码
+javadoc {
+    options {
+        encoding "UTF-8"
+        charSet 'UTF-8'
+        author true
+        version true
+        title "文档大标题"
+    }
 }
 
 //https://docs.gradle.org/7.3/userguide/publishing_maven.html#publishing_maven:resolved_dependencies
@@ -55,6 +78,10 @@ allprojects {
                 artifactId 'gradle-springboot-plugin'
                 version '1.0.0-SNAPSHOT'
                 from components.java
+
+                // 增加 sourcesJar、javadocJar 任务
+                artifact sourcesJar
+                artifact javadocJar
                 versionMapping {
                     usage('java-api') {
                         fromResolutionOf('runtimeClasspath')
