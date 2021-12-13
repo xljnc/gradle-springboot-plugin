@@ -30,7 +30,7 @@ jar {
 }
 
 //打包sourcesJar任务
-task sourcesJar(type: Jar, dependsOn: classes) {
+task sourceJar(type: Jar, dependsOn: classes) {
     archiveClassifier = rootProject.ext.sourceJarArchiveClassifier
     from sourceSets.main.allSource
 }
@@ -80,7 +80,7 @@ allprojects {
                 from components.java
 
                 // 增加 sourcesJar、javadocJar 任务
-                artifact sourcesJar
+                artifact sourceJar
                 artifact javadocJar
                 versionMapping {
                     usage('java-api') {

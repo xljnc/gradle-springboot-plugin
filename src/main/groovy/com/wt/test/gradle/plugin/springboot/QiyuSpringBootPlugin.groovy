@@ -2,7 +2,10 @@ package com.wt.test.gradle.plugin.springboot
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.publish.maven.MavenPublication
+import org.gradle.api.tasks.SourceSetContainer
+import org.gradle.api.tasks.bundling.Jar
 
 /**
  *
@@ -48,14 +51,24 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
 
             it.getTasks().each { task ->
                 if (task.name == 'jar')
-                    task.setProperty("archiveClassifier", qiyuSpringBoot.archiveClassifier)
+                    task.setProperty("archiveClassifier", qiyuSpringBoot.jarArchiveClassifier)
             }
+
+            it.task('sourceJar', type: Jar, dependsOn: 'classes') {
+                archiveClassifier = qiyuSpringBoot.sourceJarArchiveClassifier
+                JavaPluginExtension javaPluginExtension = project.extensions.getByType(JavaPluginExtension)
+                SourceSetContainer sourceSets = javaPluginExtension.sourceSets
+                from sourceSets.main.allSource
+            }
+
+           def sourceJarTask = it.tasks.getByName('sourceJar')
 
             def publicationsClosure = {
                 maven(MavenPublication) {
                     groupId project.group
                     version project.version
 //                    from components.java
+                    artifact sourceJarTask
                 }
             }
             publicationsClosure.setDelegate(project)
