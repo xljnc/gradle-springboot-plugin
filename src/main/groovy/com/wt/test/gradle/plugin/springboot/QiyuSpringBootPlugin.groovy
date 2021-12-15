@@ -30,7 +30,14 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
             mavenCentral()
         }
 
-        project.allprojects.each {
+        project.ext {
+            sourceCompatibility = qiyuSpringBoot.sourceCompatibility
+        }
+
+        project.apply plugin: 'io.spring.dependency-management'
+        project.apply plugin: 'maven-publish'
+
+        project.subprojects.each {
             it.group project.getGroup()
             it.version project.getVersion()
 
@@ -44,6 +51,9 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
                 mavenCentral()
             }
 
+            it.apply plugin: 'java'
+            it.apply plugin: 'java-library'
+            it.apply plugin: 'org.springframework.boot'
             it.apply plugin: 'maven-publish'
             it.apply plugin: 'io.spring.dependency-management'
 
@@ -51,18 +61,12 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
                 if (task.name == 'jar')
                     task.setProperty("archiveClassifier", qiyuSpringBoot.jarArchiveClassifier)
             }
-        }
 
-        project.subprojects.each {
-            it.group project.getGroup()
-            it.version project.getVersion()
-            it.apply plugin: 'java'
-            it.apply plugin: 'java-library'
-            it.apply plugin: 'org.springframework.boot'
-            it.getTasks().each {
-                if (it.name == 'bootJar')
-                    it.setProperty("enabled", false)
+            it.getTasks().each {task ->
+                if (task.name == 'bootJar')
+                    task.setProperty("enabled", false)
             }
+
             Project curr = it
 
             def sourceJarTask = it.task('sourceJar', type: Jar, group: 'build' ,dependsOn: ['clean','classes']) {
