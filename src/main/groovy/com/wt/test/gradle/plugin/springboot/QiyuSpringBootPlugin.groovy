@@ -44,8 +44,6 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
                 mavenCentral()
             }
 
-            it.apply plugin: 'java'
-            it.apply plugin: 'java-library'
             it.apply plugin: 'maven-publish'
             it.apply plugin: 'io.spring.dependency-management'
 
@@ -53,7 +51,18 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
                 if (task.name == 'jar')
                     task.setProperty("archiveClassifier", qiyuSpringBoot.jarArchiveClassifier)
             }
+        }
 
+        project.subprojects.each {
+            it.group project.getGroup()
+            it.version project.getVersion()
+            it.apply plugin: 'java'
+            it.apply plugin: 'java-library'
+            it.apply plugin: 'org.springframework.boot'
+            it.getTasks().each {
+                if (it.name == 'bootJar')
+                    it.setProperty("enabled", false)
+            }
             Project curr = it
 
             def sourceJarTask = it.task('sourceJar', type: Jar, group: 'build' ,dependsOn: ['clean','classes']) {
@@ -63,7 +72,7 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
                 from sourceSets.main.allSource
             }
 
-            def publicationsClosure = {
+            def subProjectPublicationsClosure = {
                 maven(MavenPublication) {
                     groupId project.group
                     version project.version
@@ -71,19 +80,18 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
                     artifact sourceJarTask
                 }
             }
-            publicationsClosure.setDelegate(project)
-            it.publishing.publications(publicationsClosure)
+            subProjectPublicationsClosure.setDelegate(project)
+            it.publishing.publications(subProjectPublicationsClosure)
         }
 
-        project.subprojects.each {
-            it.group project.getGroup()
-            it.version project.getVersion()
-
-            it.apply plugin: 'org.springframework.boot'
-            it.getTasks().each {
-                if (it.name == 'bootJar')
-                    it.setProperty("enabled", false)
+        def publicationsClosure = {
+            maven(MavenPublication) {
+                groupId project.group
+                version project.version
+//                    from components.java
             }
         }
+        publicationsClosure.setDelegate(project)
+        project.publishing.publications(publicationsClosure)
     }
 }
