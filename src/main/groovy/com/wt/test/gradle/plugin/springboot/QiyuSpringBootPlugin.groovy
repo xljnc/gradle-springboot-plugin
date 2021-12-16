@@ -21,9 +21,6 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
     void apply(Project project) {
         def qiyuSpringBoot = project.extensions.create(EXTENSION_NAME, SpringBootPluginExtension);
 
-//        project.buildscript.dependencies.add("classpath", "org.springframework.boot:spring-boot-gradle-plugin:2.6.1")
-//        project.buildscript.dependencies.add("classpath", "io.spring.gradle:dependency-management-plugin:1.0.11.RELEASE")
-
         project.repositories {
             mavenLocal()
             maven { name "Alibaba"; url "https://maven.aliyun.com/repository/public" }
@@ -41,9 +38,7 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
             it.group project.getGroup()
             it.version project.getVersion()
 
-            it.ext {
-                sourceCompatibility = qiyuSpringBoot.sourceCompatibility
-            }
+            it.extensions.extraProperties.set("sourceCompatibility", qiyuSpringBoot.sourceCompatibility == null ? 11 : qiyuSpringBoot.sourceCompatibility)
 
             it.repositories {
                 mavenLocal()
@@ -60,16 +55,14 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
             it.getTasks().each { task ->
                 if (task.name == 'jar')
                     task.setProperty("archiveClassifier", qiyuSpringBoot.jarArchiveClassifier)
-            }
-
-            it.getTasks().each {task ->
-                if (task.name == 'bootJar')
+                else if (task.name == 'bootJar') {
                     task.setProperty("enabled", false)
+                }
             }
 
             Project curr = it
 
-            def sourceJarTask = it.task('sourceJar', type: Jar, group: 'build' ,dependsOn: ['clean','classes']) {
+            def sourceJarTask = it.task('sourceJar', type: Jar, group: 'build', dependsOn: ['clean', 'classes']) {
                 archiveClassifier = qiyuSpringBoot.sourceJarArchiveClassifier
                 JavaPluginExtension javaPluginExtension = curr.extensions.getByType(JavaPluginExtension)
                 SourceSetContainer sourceSets = javaPluginExtension.sourceSets
@@ -82,9 +75,14 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
                     version project.version
 //                    from components.java
                     artifact sourceJarTask
+                    curr.getTasksByName("bootJar", false).each {
+                        if (it.property("enabled") == true){
+                            artifact it
+                        }
+                    }
                 }
             }
-            subProjectPublicationsClosure.setDelegate(project)
+            subProjectPublicationsClosure.setDelegate(it)
             it.publishing.publications(subProjectPublicationsClosure)
         }
 
