@@ -75,11 +75,11 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
                     version project.version
 //                    from components.java
                     artifact sourceJarTask
-                    curr.getTasksByName("bootJar", false).each {
-                        if (it.property("enabled") == true){
-                            artifact it
-                        }
-                    }
+//                    curr.getTasksByName("bootJar", false).each {
+//                        if (it.property("enabled") == true){
+//                            artifact it
+//                        }
+//                    }
                 }
             }
             subProjectPublicationsClosure.setDelegate(it)
