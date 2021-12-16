@@ -53,9 +53,9 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
             it.apply plugin: 'io.spring.dependency-management'
 
             it.getTasks().each { task ->
-                if (task.name == 'jar')
+                if (task.name == 'jar') {
                     task.setProperty("archiveClassifier", qiyuSpringBoot.jarArchiveClassifier)
-                else if (task.name == 'bootJar') {
+                } else if (task.name == 'bootJar') {
                     task.setProperty("enabled", false)
                 }
             }
@@ -75,11 +75,6 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
                     version project.version
 //                    from components.java
                     artifact sourceJarTask
-//                    curr.getTasksByName("bootJar", false).each {
-//                        if (it.property("enabled") == true){
-//                            artifact it
-//                        }
-//                    }
                 }
             }
             subProjectPublicationsClosure.setDelegate(it)
