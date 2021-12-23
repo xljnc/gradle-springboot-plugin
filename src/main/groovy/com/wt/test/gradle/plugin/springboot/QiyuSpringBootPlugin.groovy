@@ -30,14 +30,18 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
+        project.apply plugin: 'java'
+        project.apply plugin: 'io.spring.dependency-management'
+
         def qiyuSpringBoot = project.extensions.create(EXTENSION_NAME, SpringBootPluginExtension);
 
-        InternalComponents internalComponents = new InternalComponents(project);
+//        InternalComponents internalComponents = new InternalComponents(project);
+//
+//        final DependencyManagementExtension dependencyManagementExtension =
+//                internalComponents.getDependencyManagementExtension();
+//
+//        project.extensions.add(DEPENDENCY_MANAGEMENT_EXTENSION_NAME, dependencyManagementExtension);
 
-        final DependencyManagementExtension dependencyManagementExtension =
-                internalComponents.getDependencyManagementExtension();
-
-        project.extensions.add(DEPENDENCY_MANAGEMENT_EXTENSION_NAME, dependencyManagementExtension);
 
         project.repositories {
             mavenLocal()
@@ -65,9 +69,10 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
             it.apply plugin: 'java-library'
             it.apply plugin: 'org.springframework.boot'
             it.apply plugin: 'maven-publish'
-//            it.apply plugin: 'io.spring.dependency-management'
+            it.apply plugin: 'io.spring.dependency-management'
 
-            configDependencyManagement(it,dependencyManagementExtension);
+            it.dependencyManagement = it.rootProject.dependencyManagement
+//            configDependencyManagement(it, dependencyManagementExtension);
 
             it.getTasks().each { task ->
                 if (task.name == 'jar') {
@@ -111,18 +116,17 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
         project.publishing.publications(publicationsClosure)
     }
 
-    private void configDependencyManagement(Project project,DependencyManagementExtension dependencyManagementExtension) {
-        InternalComponents internalComponents = new InternalComponents(project);
+    private void configDependencyManagement(Project subProject, DependencyManagementExtension dependencyManagementExtension) {
+        InternalComponents internalComponents = new InternalComponents(subProject);
 
-//        project.extensions.add(DEPENDENCY_MANAGEMENT_EXTENSION_NAME, dependencyManagementExtension);
+        subProject.extensions.add(DEPENDENCY_MANAGEMENT_EXTENSION_NAME, dependencyManagementExtension);
 
         internalComponents.createDependencyManagementReportTask("dependencyManagement");
 
-        project.getConfigurations().all(internalComponents.getImplicitDependencyManagementCollector());
-        project.getConfigurations().all(internalComponents.getDependencyManagementApplier());
+        subProject.getConfigurations().all(internalComponents.getImplicitDependencyManagementCollector());
+        subProject.getConfigurations().all(internalComponents.getDependencyManagementApplier());
 
-        configurePomCustomization(project, dependencyManagementExtension);
-
+        configurePomCustomization(subProject, dependencyManagementExtension);
     }
 
     private void configurePomCustomization(final Project project, DependencyManagementExtension dependencyManagementExtension) {
