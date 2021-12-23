@@ -31,6 +31,7 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
             sourceCompatibility = qiyuSpringBoot.sourceCompatibility
         }
 
+
         project.apply plugin: 'io.spring.dependency-management'
         project.apply plugin: 'maven-publish'
 

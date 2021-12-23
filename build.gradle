@@ -3,6 +3,7 @@ plugins {
     id 'java'
     id 'maven-publish'
     id 'java-gradle-plugin'
+
 }
 
 group 'com.wt.test'
@@ -12,6 +13,7 @@ dependencies {
     implementation 'org.codehaus.groovy:groovy-all:3.0.9'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    implementation "io.spring.gradle:dependency-management-plugin:1.0.11.RELEASE"
 }
 
 test {
@@ -68,6 +70,9 @@ allprojects {
             mavenLocal()
             maven { name "Alibaba"; url 'https://maven.aliyun.com/repository/public' }
             mavenCentral()
+        }
+        dependencies {
+            classpath "io.spring.gradle:dependency-management-plugin:1.0.11.RELEASE"
         }
     }
 
