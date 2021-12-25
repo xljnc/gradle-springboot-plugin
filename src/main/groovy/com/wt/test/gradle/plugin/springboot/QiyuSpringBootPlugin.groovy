@@ -16,12 +16,10 @@ import org.gradle.api.tasks.bundling.Jar
  */
 class QiyuSpringBootPlugin implements Plugin<Project> {
 
-    static final String EXTENSION_NAME = "qiyuSpringBoot";
+//    static final String EXTENSION_NAME = "qiyuSpringBoot";
 
     @Override
     void apply(Project project) {
-
-        def qiyuSpringBoot = project.extensions.create(EXTENSION_NAME, SpringBootPluginExtension);
 
         project.repositories {
             mavenLocal()
@@ -30,14 +28,21 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
         }
 
         project.ext {
-            sourceCompatibility = qiyuSpringBoot.sourceCompatibility
+            if (!hasExtraProperty(project,"sourceCompatibility"))
+                sourceCompatibility = 11
+            if (!hasExtraProperty(project,"jarArchiveClassifier") && !hasExtraProperty(project,"archiveClassifier"))
+                jarArchiveClassifier = ''
+            if (!hasExtraProperty(project,"sourceJarArchiveClassifier"))
+                sourceJarArchiveClassifier = 'sources'
+            if (!hasExtraProperty(project,"docJarArchiveClassifier"))
+                docJarArchiveClassifier = 'javadoc'
         }
 
         project.subprojects.each {
             it.group project.group
             it.version project.version
 
-            it.extensions.extraProperties.set("sourceCompatibility", qiyuSpringBoot.sourceCompatibility == null ? 11 : qiyuSpringBoot.sourceCompatibility)
+            it.extensions.extraProperties.set("sourceCompatibility", project.ext.sourceCompatibility)
 
             it.repositories {
                 mavenLocal()
@@ -60,7 +65,7 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
 
             it.getTasks().each { task ->
                 if (task.name == 'jar') {
-                    task.setProperty("archiveClassifier", qiyuSpringBoot.jarArchiveClassifier)
+                    task.setProperty("archiveClassifier", project.ext.jarArchiveClassifier)
                 } else if (task.name == 'bootJar') {
                     task.setProperty("enabled", false)
                 }
@@ -69,7 +74,7 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
             Project curr = it
 
             def sourceJarTask = it.task('sourceJar', type: Jar, group: 'build', dependsOn: ['clean', 'classes']) {
-                archiveClassifier = qiyuSpringBoot.sourceJarArchiveClassifier
+                archiveClassifier = project.ext.sourceJarArchiveClassifier
                 JavaPluginExtension javaPluginExtension = curr.extensions.getByType(JavaPluginExtension)
                 SourceSetContainer sourceSets = javaPluginExtension.sourceSets
                 from sourceSets.main.allSource
@@ -98,5 +103,9 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
         }
         publicationsClosure.setDelegate(project)
         project.publishing.publications(publicationsClosure)
+    }
+
+    private boolean hasExtraProperty(Project project, String name) {
+        return project.extensions.extraProperties.has(name);
     }
 }
