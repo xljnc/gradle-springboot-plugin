@@ -82,14 +82,14 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
 
             def subProjectPublicationsClosure = {
                 maven(MavenPublication) {
-                    groupId project.group
-                    version project.version
+                    groupId curr.group
+                    version curr.version
 //                    from components.java
                     artifact sourceJarTask
                 }
             }
-            subProjectPublicationsClosure.setDelegate(it)
-            it.publishing.publications(subProjectPublicationsClosure)
+            subProjectPublicationsClosure.setDelegate(curr)
+            curr.publishing.publications(subProjectPublicationsClosure)
         }
 
         project.apply plugin: 'maven-publish'
