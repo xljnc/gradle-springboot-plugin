@@ -28,13 +28,13 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
         }
 
         project.ext {
-            if (!hasExtraProperty(project,"sourceCompatibility"))
+            if (!hasExtraProperty(project, "sourceCompatibility"))
                 sourceCompatibility = 11
-            if (!hasExtraProperty(project,"jarArchiveClassifier") && !hasExtraProperty(project,"archiveClassifier"))
+            if (!hasExtraProperty(project, "jarArchiveClassifier") && !hasExtraProperty(project, "archiveClassifier"))
                 jarArchiveClassifier = ''
-            if (!hasExtraProperty(project,"sourceJarArchiveClassifier"))
+            if (!hasExtraProperty(project, "sourceJarArchiveClassifier"))
                 sourceJarArchiveClassifier = 'sources'
-            if (!hasExtraProperty(project,"docJarArchiveClassifier"))
+            if (!hasExtraProperty(project, "docJarArchiveClassifier"))
                 docJarArchiveClassifier = 'javadoc'
         }
 
@@ -63,14 +63,6 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
             it.apply plugin: 'maven-publish'
             it.apply plugin: 'io.spring.dependency-management'
 
-            it.getTasks().each { task ->
-                if (task.name == 'jar') {
-                    task.setProperty("archiveClassifier", project.ext.jarArchiveClassifier)
-                } else if (task.name == 'bootJar') {
-                    task.setProperty("enabled", false)
-                }
-            }
-
             Project curr = it
 
             def sourceJarTask = it.task('sourceJar', type: Jar, group: 'build', dependsOn: ['clean', 'classes']) {
@@ -90,6 +82,17 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
             }
             subProjectPublicationsClosure.setDelegate(curr)
             curr.publishing.publications(subProjectPublicationsClosure)
+
+            def jarTask = it.tasks.getByName('jar')
+            if (jarTask != null) {
+                jarTask.setProperty("archiveClassifier", project.ext.jarArchiveClassifier)
+            }
+
+            def bootJarTask = it.tasks.getByName('bootJar')
+            if (bootJarTask != null) {
+                bootJarTask.setProperty("enabled", false)
+            }
+
         }
 
         project.apply plugin: 'maven-publish'
