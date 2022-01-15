@@ -65,7 +65,7 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
 
             Project curr = it
 
-            def sourceJarTask = it.task('sourceJar', type: Jar, group: 'build', dependsOn: ['clean', 'classes']) {
+            def sourceJarTask = it.task('sourceJar', type: Jar, group: 'build') {
                 archiveClassifier = project.ext.sourceJarArchiveClassifier
                 JavaPluginExtension javaPluginExtension = curr.extensions.getByType(JavaPluginExtension)
                 SourceSetContainer sourceSets = javaPluginExtension.sourceSets
