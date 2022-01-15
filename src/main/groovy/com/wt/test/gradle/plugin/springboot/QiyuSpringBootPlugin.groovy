@@ -72,23 +72,26 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
                 from sourceSets.main.allSource
             }
 
+            def jarTask = it.tasks.getByName('jar')
+            def bootJarTask = it.tasks.getByName('bootJar')
+
             def subProjectPublicationsClosure = {
                 maven(MavenPublication) {
                     groupId curr.group
                     version curr.version
 //                    from components.java
+                    artifact jarTask
+                    artifact bootJarTask
                     artifact sourceJarTask
                 }
             }
             subProjectPublicationsClosure.setDelegate(curr)
             curr.publishing.publications(subProjectPublicationsClosure)
 
-            def jarTask = it.tasks.getByName('jar')
             if (jarTask != null) {
                 jarTask.setProperty("archiveClassifier", project.ext.jarArchiveClassifier)
             }
 
-            def bootJarTask = it.tasks.getByName('bootJar')
             if (bootJarTask != null) {
                 bootJarTask.setProperty("enabled", false)
             }
