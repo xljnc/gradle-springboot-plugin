@@ -73,7 +73,10 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
             }
 
             def jarTask = it.tasks.getByName('jar')
+            jarTask.setProperty("archiveClassifier", project.ext.jarArchiveClassifier)
+
             def bootJarTask = it.tasks.getByName('bootJar')
+            bootJarTask.setProperty("enabled", false)
 
             def subProjectPublicationsClosure = {
                 maven(MavenPublication) {
@@ -87,15 +90,6 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
             }
             subProjectPublicationsClosure.setDelegate(curr)
             curr.publishing.publications(subProjectPublicationsClosure)
-
-            if (jarTask != null) {
-                jarTask.setProperty("archiveClassifier", project.ext.jarArchiveClassifier)
-            }
-
-            if (bootJarTask != null) {
-                bootJarTask.setProperty("enabled", false)
-            }
-
         }
 
         project.apply plugin: 'maven-publish'
