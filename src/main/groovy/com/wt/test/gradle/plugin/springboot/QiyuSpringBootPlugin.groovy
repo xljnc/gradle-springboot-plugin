@@ -38,6 +38,8 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
                 docJarArchiveClassifier = 'javadoc'
         }
 
+        project.apply plugin: 'io.spring.dependency-management'
+
         project.subprojects.each {
             it.group project.group
             it.version project.version
