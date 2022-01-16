@@ -38,7 +38,7 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
                 docJarArchiveClassifier = 'javadoc'
         }
 
-//        project.apply plugin: 'io.spring.dependency-management'
+        project.apply plugin: 'io.spring.dependency-management'
 
         project.apply plugin: 'maven-publish'
 
@@ -46,7 +46,6 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
             maven(MavenPublication) {
                 groupId project.group
                 version project.version
-//                from project.components.getByName("java")
                 versionMapping {
                     usage('java-api') {
                         fromResolutionOf('runtimeClasspath')
@@ -83,7 +82,7 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
             it.apply plugin: 'java-library'
             it.apply plugin: 'org.springframework.boot'
             it.apply plugin: 'maven-publish'
-//            it.apply plugin: 'io.spring.dependency-management'
+            it.apply plugin: 'io.spring.dependency-management'
 
             Project curr = it
 
@@ -106,10 +105,6 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
                     version curr.version
                     from curr.components.getByName("java")
                     artifact bootJarTask
-
-//                    if(jarTask.property("enabled")){
-//                        artifact jarTask
-//                    }
                     artifact sourceJarTask
                     versionMapping {
                         usage('java-api') {
