@@ -78,7 +78,7 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
                     mavenCentral()
                 }
                 dependencies {
-                    classpath "org.springframework.boot:spring-boot-gradle-plugin:2.6.2"
+                    classpath "org.springframework.boot:spring-boot-gradle-plugin:2.6.3"
                     classpath "io.spring.gradle:dependency-management-plugin:1.0.11.RELEASE"
                 }
             }
