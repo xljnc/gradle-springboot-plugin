@@ -99,6 +99,11 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
             def bootJarTask = it.tasks.getByName('bootJar')
             bootJarTask.setProperty("enabled", false)
 
+            it.tasks.named('test'){
+                useJUnitPlatform()
+                enabled = false
+            }
+
             def subProjectPublicationsClosure = {
                 maven(MavenPublication) {
                     groupId curr.group
