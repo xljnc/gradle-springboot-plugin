@@ -72,8 +72,13 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
             }
 
             it.buildscript {
+                repositories {
+                    mavenLocal()
+                    maven { name "Alibaba"; url "https://maven.aliyun.com/repository/public" }
+                    mavenCentral()
+                }
                 dependencies {
-                    classpath "org.springframework.boot:spring-boot-gradle-plugin:2.6.2"
+                    classpath "org.springframework.boot:spring-boot-gradle-plugin:2.6.3"
                     classpath "io.spring.gradle:dependency-management-plugin:1.0.11.RELEASE"
                 }
             }
