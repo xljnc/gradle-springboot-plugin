@@ -7,7 +7,7 @@ plugins {
 }
 
 group 'com.wt.test'
-version '1.0.0-SNAPSHOT'
+version '1.0.1-SNAPSHOT'
 
 dependencies {
     implementation 'org.codehaus.groovy:groovy-all:3.0.9'
@@ -20,7 +20,7 @@ test {
 }
 
 ext {
-    sourceCompatibility = 11
+    sourceCompatibility = 17
     jarArchiveClassifier = ''
     sourceJarArchiveClassifier = 'sources'
     docJarArchiveClassifier = 'javadoc'
@@ -71,7 +71,7 @@ allprojects {
             mavenCentral()
         }
         dependencies {
-            classpath "io.spring.gradle:dependency-management-plugin:1.0.11.RELEASE"
+            classpath "io.spring.gradle:dependency-management-plugin:1.0.15.RELEASE"
         }
     }
 
@@ -80,7 +80,7 @@ allprojects {
             mavenLocal(MavenPublication) {
                 group 'com.wt.test'
                 artifactId 'gradle-springboot-plugin'
-                version '1.0.0-SNAPSHOT'
+                version '1.0.1-SNAPSHOT'
                 from components.java
 
                 // 增加 sourcesJar、javadocJar 任务

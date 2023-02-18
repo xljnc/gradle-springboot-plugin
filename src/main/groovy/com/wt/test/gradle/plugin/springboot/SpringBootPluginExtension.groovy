@@ -7,7 +7,7 @@ package com.wt.test.gradle.plugin.springboot
  * @date 2021/12/10
  */
 class SpringBootPluginExtension {
-    int sourceCompatibility = 11
+    int sourceCompatibility = 17
     String jarArchiveClassifier = ''
     String sourceJarArchiveClassifier = 'sources'
     String docJarArchiveClassifier = 'javadoc'

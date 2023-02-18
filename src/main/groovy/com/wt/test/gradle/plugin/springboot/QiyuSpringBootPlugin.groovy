@@ -29,7 +29,7 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
 
         project.ext {
             if (!hasExtraProperty(project, "sourceCompatibility"))
-                sourceCompatibility = 11
+                sourceCompatibility = 17
             if (!hasExtraProperty(project, "jarArchiveClassifier") && !hasExtraProperty(project, "archiveClassifier"))
                 jarArchiveClassifier = ''
             if (!hasExtraProperty(project, "sourceJarArchiveClassifier"))
@@ -79,7 +79,7 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
                 }
                 dependencies {
                     classpath "org.springframework.boot:spring-boot-gradle-plugin:2.6.3"
-                    classpath "io.spring.gradle:dependency-management-plugin:1.0.11.RELEASE"
+                    classpath "io.spring.gradle:dependency-management-plugin:1.0.15.RELEASE"
                 }
             }
 
