@@ -23,7 +23,9 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
 
         project.repositories {
             mavenLocal()
-            maven { name "Alibaba"; url "https://maven.aliyun.com/repository/public" }
+            maven { name "Alibaba public"; url "https://maven.aliyun.com/repository/public" }
+            maven { name "Alibaba central"; url "https://maven.aliyun.com/repository/central" }
+            maven { name "Alibaba jcenter"; url "https://maven.aliyun.com/repository/jcenter" }
             mavenCentral()
         }
 
@@ -37,7 +39,7 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
             if (!hasExtraProperty(project, "docJarArchiveClassifier"))
                 docJarArchiveClassifier = 'javadoc'
             if (!hasExtraProperty(project, "springbootVersion"))
-                springbootVersion = '2.7.8'
+                springbootVersion = '3.0.2'
             if (!hasExtraProperty(project, "dependencyManagementPluginVersion"))
                 dependencyManagementPluginVersion = '1.0.15.RELEASE'
         }
@@ -71,14 +73,18 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
 
             it.repositories {
                 mavenLocal()
-                maven { name "Alibaba"; url "https://maven.aliyun.com/repository/public" }
+                maven { name "Alibaba public"; url "https://maven.aliyun.com/repository/public" }
+                maven { name "Alibaba central"; url "https://maven.aliyun.com/repository/central" }
+                maven { name "Alibaba jcenter"; url "https://maven.aliyun.com/repository/jcenter" }
                 mavenCentral()
             }
 
             it.buildscript {
                 repositories {
                     mavenLocal()
-                    maven { name "Alibaba"; url "https://maven.aliyun.com/repository/public" }
+                    maven { name "Alibaba public"; url "https://maven.aliyun.com/repository/public" }
+                    maven { name "Alibaba central"; url "https://maven.aliyun.com/repository/central" }
+                    maven { name "Alibaba jcenter"; url "https://maven.aliyun.com/repository/jcenter" }
                     mavenCentral()
                 }
                 dependencies {
