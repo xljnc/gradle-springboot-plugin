@@ -11,5 +11,7 @@ class SpringBootPluginExtension {
     String jarArchiveClassifier = ''
     String sourceJarArchiveClassifier = 'sources'
     String docJarArchiveClassifier = 'javadoc'
+    String springbootVersion = '2.7.8'
+    String dependencyManagementPluginVersion = '1.0.15.RELEASE'
 }
 

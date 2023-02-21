@@ -36,6 +36,10 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
                 sourceJarArchiveClassifier = 'sources'
             if (!hasExtraProperty(project, "docJarArchiveClassifier"))
                 docJarArchiveClassifier = 'javadoc'
+            if (!hasExtraProperty(project, "springbootVersion"))
+                springbootVersion = '2.7.8'
+            if (!hasExtraProperty(project, "dependencyManagementPluginVersion"))
+                dependencyManagementPluginVersion = '1.0.15.RELEASE'
         }
 
         project.apply plugin: 'io.spring.dependency-management'
@@ -78,8 +82,8 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
                     mavenCentral()
                 }
                 dependencies {
-                    classpath "org.springframework.boot:spring-boot-gradle-plugin:2.7.8"
-                    classpath "io.spring.gradle:dependency-management-plugin:1.0.15.RELEASE"
+                    classpath "org.springframework.boot:spring-boot-gradle-plugin:${project.ext.springbootVersion}"
+                    classpath "io.spring.gradle:dependency-management-plugin:${project.ext.dependencyManagementPluginVersion}"
                 }
             }
 
