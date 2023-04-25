@@ -39,14 +39,14 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
             if (!hasExtraProperty(project, "docJarArchiveClassifier"))
                 docJarArchiveClassifier = 'javadoc'
             if (!hasExtraProperty(project, "springbootVersion"))
-                springbootVersion = '3.0.2'
-            if (!hasExtraProperty(project, "dependencyManagementPluginVersion"))
-                dependencyManagementPluginVersion = '1.0.15.RELEASE'
+                springbootVersion = '3.0.6'
         }
 
+        project.apply plugin: 'java'
+        project.apply plugin: 'java-library'
         project.apply plugin: 'io.spring.dependency-management'
-
         project.apply plugin: 'maven-publish'
+        project.apply plugin: 'org.springframework.boot'
 
         def publicationsClosure = {
             maven(MavenPublication) {
@@ -89,7 +89,6 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
                 }
                 dependencies {
                     classpath "org.springframework.boot:spring-boot-gradle-plugin:${project.ext.springbootVersion}"
-                    classpath "io.spring.gradle:dependency-management-plugin:${project.ext.dependencyManagementPluginVersion}"
                 }
             }
 
@@ -139,8 +138,6 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
             subProjectPublicationsClosure.setDelegate(curr)
             curr.publishing.publications(subProjectPublicationsClosure)
         }
-
-
     }
 
     private boolean hasExtraProperty(Project project, String name) {
