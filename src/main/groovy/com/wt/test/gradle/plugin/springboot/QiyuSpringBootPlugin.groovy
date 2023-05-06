@@ -30,16 +30,12 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
         }
 
         project.ext {
-            if (!hasExtraProperty(project, "sourceCompatibility"))
-                sourceCompatibility = 17
-            if (!hasExtraProperty(project, "jarArchiveClassifier") && !hasExtraProperty(project, "archiveClassifier"))
-                jarArchiveClassifier = ''
-            if (!hasExtraProperty(project, "sourceJarArchiveClassifier"))
-                sourceJarArchiveClassifier = 'sources'
-            if (!hasExtraProperty(project, "docJarArchiveClassifier"))
-                docJarArchiveClassifier = 'javadoc'
-            if (!hasExtraProperty(project, "springbootVersion"))
-                springbootVersion = '3.0.6'
+            if (!hasExtraProperty(project, "sourceCompatibility")) sourceCompatibility = 17
+            if (!hasExtraProperty(project, "jarArchiveClassifier") && !hasExtraProperty(project, "archiveClassifier")) jarArchiveClassifier = ''
+            if (!hasExtraProperty(project, "sourceJarArchiveClassifier")) sourceJarArchiveClassifier = 'sources'
+            if (!hasExtraProperty(project, "docJarArchiveClassifier")) docJarArchiveClassifier = 'javadoc'
+            if (!hasExtraProperty(project, "springbootVersion")) springbootVersion = '3.0.6'
+            if (!hasExtraProperty(project, "enableBoot")) enableBoot = false
         }
 
         project.apply plugin: 'java'
@@ -55,15 +51,14 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
             from sourceSets.main.allSource
         }
 
-        def rootJarTask = project.tasks.named('jar'){
-            archiveClassifier =  project.ext.jarArchiveClassifier
-        }
-//        rootJarTask.setProperty("archiveClassifier", project.ext.jarArchiveClassifier)
+        def rootJarTask = project.tasks.getByName('jar')
+        rootJarTask.setProperty("archiveClassifier", project.ext.jarArchiveClassifier)
+        rootJarTask.enabled = !project.ext.enableBoot
 
         def rootBootJarTask = project.tasks.getByName('bootJar');
-        rootBootJarTask.enabled = false
+        rootBootJarTask.enabled = project.ext.enableBoot
 
-        project.tasks.named('test'){
+        project.tasks.named('test') {
             useJUnitPlatform()
             enabled = false
         }
@@ -94,6 +89,11 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
             it.version project.version
 
             it.extensions.extraProperties.set("sourceCompatibility", project.ext.sourceCompatibility)
+
+            if (!hasExtraProperty(it, "enableBoot"))
+                it.extensions.extraProperties.set("enableBoot", false)
+
+            boolean enableSubBoot = it.ext.enableBoot;
 
             it.repositories {
                 mavenLocal()
@@ -133,11 +133,12 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
 
             def jarTask = it.tasks.getByName('jar')
             jarTask.setProperty("archiveClassifier", project.ext.jarArchiveClassifier)
+            jarTask.enabled = !enableSubBoot
 
             def bootJarTask = it.tasks.getByName('bootJar')
-            bootJarTask.setProperty("enabled", false)
+            bootJarTask.enabled = enableSubBoot
 
-            it.tasks.named('test'){
+            it.tasks.named('test') {
                 useJUnitPlatform()
                 enabled = false
             }
