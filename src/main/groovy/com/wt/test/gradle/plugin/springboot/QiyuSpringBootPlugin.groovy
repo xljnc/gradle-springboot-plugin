@@ -48,10 +48,34 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
         project.apply plugin: 'maven-publish'
         project.apply plugin: 'org.springframework.boot'
 
+        def rootSourceJarTask = project.task('sourceJar', type: Jar, group: 'build') {
+            archiveClassifier = project.ext.sourceJarArchiveClassifier
+            JavaPluginExtension javaPluginExtension = project.extensions.getByType(JavaPluginExtension)
+            SourceSetContainer sourceSets = javaPluginExtension.sourceSets
+            from sourceSets.main.allSource
+        }
+
+        def rootJarTask = project.tasks.named('jar'){
+            archiveClassifier =  project.ext.jarArchiveClassifier
+        }
+//        rootJarTask.setProperty("archiveClassifier", project.ext.jarArchiveClassifier)
+
+        def rootBootJarTask = project.tasks.getByName('bootJar');
+        rootBootJarTask.enabled = false
+
+        project.tasks.named('test'){
+            useJUnitPlatform()
+            enabled = false
+        }
+
+
         def publicationsClosure = {
             maven(MavenPublication) {
                 groupId project.group
                 version project.version
+                from project.components.getByName("java")
+                artifact rootBootJarTask
+                artifact rootSourceJarTask
                 versionMapping {
                     usage('java-api') {
                         fromResolutionOf('runtimeClasspath')
