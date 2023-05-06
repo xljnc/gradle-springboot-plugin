@@ -90,11 +90,6 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
 
             it.extensions.extraProperties.set("sourceCompatibility", project.ext.sourceCompatibility)
 
-            if (!hasExtraProperty(it, "enableBoot"))
-                it.extensions.extraProperties.set("enableBoot", false)
-
-            boolean enableSubBoot = it.ext.enableBoot;
-
             it.repositories {
                 mavenLocal()
                 maven { name "Alibaba public"; url "https://maven.aliyun.com/repository/public" }
@@ -133,10 +128,9 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
 
             def jarTask = it.tasks.getByName('jar')
             jarTask.setProperty("archiveClassifier", project.ext.jarArchiveClassifier)
-            jarTask.enabled = !enableSubBoot
 
             def bootJarTask = it.tasks.getByName('bootJar')
-            bootJarTask.enabled = enableSubBoot
+            bootJarTask.enabled = false
 
             it.tasks.named('test') {
                 useJUnitPlatform()
