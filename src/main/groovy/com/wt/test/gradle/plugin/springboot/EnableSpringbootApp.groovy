@@ -12,10 +12,14 @@ class EnableSpringbootApp {
 
     //启用SpringBoot 打 boot jar任务
     def enableBootApp(Project project) {
-        def rootJarTask = project.tasks.getByName('jar')
-        rootJarTask.enabled = false
+        def jarTask = project.tasks.getByName('jar')
+        jarTask.enabled = false
 
-        def rootBootJarTask = project.tasks.getByName('bootJar');
-        rootBootJarTask.enabled = true
+        def bootJarTask = project.tasks.getByName('bootJar');
+        bootJarTask.enabled = true
+
+        project.tasks.named('generateMetadataFileForMavenPublication') {
+            dependsOn(bootJarTask)
+        }
     }
 }
