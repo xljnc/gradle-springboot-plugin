@@ -35,7 +35,6 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
             if (!hasExtraProperty(project, "sourceJarArchiveClassifier")) sourceJarArchiveClassifier = 'sources'
             if (!hasExtraProperty(project, "docJarArchiveClassifier")) docJarArchiveClassifier = 'javadoc'
             if (!hasExtraProperty(project, "springbootVersion")) springbootVersion = '3.0.6'
-            if (!hasExtraProperty(project, "enableBoot")) enableBoot = false
         }
 
         project.apply plugin: 'java'
@@ -43,6 +42,8 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
         project.apply plugin: 'io.spring.dependency-management'
         project.apply plugin: 'maven-publish'
         project.apply plugin: 'org.springframework.boot'
+
+        project.extensions.create("enableBoot", EnableSpringbootApp)
 
         def rootSourceJarTask = project.task('sourceJar', type: Jar, group: 'build') {
             archiveClassifier = project.ext.sourceJarArchiveClassifier
@@ -53,10 +54,10 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
 
         def rootJarTask = project.tasks.getByName('jar')
         rootJarTask.setProperty("archiveClassifier", project.ext.jarArchiveClassifier)
-        rootJarTask.enabled = !project.ext.enableBoot
+        rootJarTask.enabled = true
 
         def rootBootJarTask = project.tasks.getByName('bootJar');
-        rootBootJarTask.enabled = project.ext.enableBoot
+        rootBootJarTask.enabled = false
 
         project.tasks.named('test') {
             useJUnitPlatform()
@@ -119,6 +120,8 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
 
             Project curr = it
 
+            it.extensions.create("enableBoot", EnableSpringbootApp)
+
             def sourceJarTask = it.task('sourceJar', type: Jar, group: 'build') {
                 archiveClassifier = project.ext.sourceJarArchiveClassifier
                 JavaPluginExtension javaPluginExtension = curr.extensions.getByType(JavaPluginExtension)
@@ -128,6 +131,7 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
 
             def jarTask = it.tasks.getByName('jar')
             jarTask.setProperty("archiveClassifier", project.ext.jarArchiveClassifier)
+            jarTask.enabled = true
 
             def bootJarTask = it.tasks.getByName('bootJar')
             bootJarTask.enabled = false
