@@ -34,7 +34,7 @@ class QiyuSpringBootPlugin implements Plugin<Project> {
             if (!hasExtraProperty(project, "jarArchiveClassifier") && !hasExtraProperty(project, "archiveClassifier")) jarArchiveClassifier = ''
             if (!hasExtraProperty(project, "sourceJarArchiveClassifier")) sourceJarArchiveClassifier = 'sources'
             if (!hasExtraProperty(project, "docJarArchiveClassifier")) docJarArchiveClassifier = 'javadoc'
-            if (!hasExtraProperty(project, "springbootVersion")) springbootVersion = '3.0.6'
+            if (!hasExtraProperty(project, "springbootVersion")) springbootVersion = '3.1.1'
         }
 
         project.apply plugin: 'java'
